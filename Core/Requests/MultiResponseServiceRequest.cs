@@ -167,6 +167,15 @@ namespace Microsoft.Exchange.WebServices.Data
         }
 
         /// <summary>
+        /// Executes this request in an async-await fashion.
+        /// </summary>
+        /// <returns>Service response collection promise.</returns>
+        internal async System.Threading.Tasks.Task<ServiceResponseCollection<TResponse>> ExecuteAsync()
+        {
+            return await System.Threading.Tasks.Task.Factory.FromAsync<ServiceResponseCollection<TResponse>>(this.BeginExecute, this.EndExecute, this);
+        }
+
+        /// <summary>
         /// Gets a value indicating how errors should be handled.
         /// </summary>
         internal ServiceErrorHandling ErrorHandlingMode

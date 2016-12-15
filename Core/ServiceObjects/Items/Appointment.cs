@@ -88,6 +88,22 @@ namespace Microsoft.Exchange.WebServices.Data
         }
 
         /// <summary>
+        /// Binds to an existing appointment and loads the specified set of properties.
+        /// Calling this method results in a call to EWS.
+        /// </summary>
+        /// <param name="service">The service to use to bind to the appointment.</param>
+        /// <param name="id">The Id of the appointment to bind to.</param>
+        /// <param name="propertySet">The set of properties to load.</param>
+        /// <returns>An Appointment instance representing the appointment corresponding to the specified Id.</returns>
+        public static async new System.Threading.Tasks.Task<Appointment> BindAsync(
+            ExchangeService service,
+            ItemId id,
+            PropertySet propertySet)
+        {
+            return await service.BindToItemAsync<Appointment>(id, propertySet);
+        }
+
+        /// <summary>
         /// Binds to an existing appointment and loads its first class properties.
         /// Calling this method results in a call to EWS.
         /// </summary>
@@ -409,6 +425,23 @@ namespace Microsoft.Exchange.WebServices.Data
         }
 
         /// <summary>
+        /// Applies the local changes that have been made to this appointment. Calling this method results in at least one call to EWS.
+        /// Mutliple calls to EWS might be made if attachments have been added or removed.
+        /// </summary>
+        /// <param name="conflictResolutionMode">Specifies how conflicts should be resolved.</param>
+        /// <param name="sendInvitationsOrCancellationsMode">Specifies if and how invitations or cancellations should be sent if this appointment is a meeting.</param>
+        public async System.Threading.Tasks.Task UpdateAsync(
+            ConflictResolutionMode conflictResolutionMode,
+            SendInvitationsOrCancellationsMode sendInvitationsOrCancellationsMode)
+        {
+            await this.InternalUpdateAsync(
+                null,
+                conflictResolutionMode,
+                null,
+                sendInvitationsOrCancellationsMode);
+        }
+
+        /// <summary>
         /// Deletes this appointment. Calling this method results in a call to EWS.
         /// </summary>
         /// <param name="deleteMode">The deletion mode.</param>
@@ -416,6 +449,19 @@ namespace Microsoft.Exchange.WebServices.Data
         public void Delete(DeleteMode deleteMode, SendCancellationsMode sendCancellationsMode)
         {
             this.InternalDelete(
+                deleteMode,
+                sendCancellationsMode,
+                null);
+        }
+
+        /// <summary>
+        /// Deletes this appointment. Calling this method results in a call to EWS.
+        /// </summary>
+        /// <param name="deleteMode">The deletion mode.</param>
+        /// <param name="sendCancellationsMode">Specifies if and how cancellations should be sent if this appointment is a meeting.</param>
+        public async System.Threading.Tasks.Task DeleteAsync(DeleteMode deleteMode, SendCancellationsMode sendCancellationsMode)
+        {
+            await this.InternalDeleteAsync(
                 deleteMode,
                 sendCancellationsMode,
                 null);
